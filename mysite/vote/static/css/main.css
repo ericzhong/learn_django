@@ -1,0 +1,58 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+.container {
+    width: 1000px;
+}
+
+.content {
+    padding-top: 20px;
+}
+
+
+#new_issue {
+    margin-bottom: 10px;
+}
+
+
+.reply-count {
+    margin-top: 3em;
+    margin-bottom: 1em;
+}
+
+.reply {
+    border-bottom: 1px solid #EEE;
+    margin-bottom: 1em;
+}
+
+.reply-by {
+    font-style: italic;
+    text-align: right;
+}
+
+
+.reply-form {
+    margin-top: 6em;
+    margin-bottom: 10em;
+}
+
+p.navbar-right {
+    margin-right: auto;
+}
+
+
+#login-box {
+    width: 450px;
+    margin-top: 100px;
+    border: 1px solid lightgray;
+    padding-bottom: 15px;
+}
+
+#new-issue-box {
+    width: 800px;
+    margin-top: 40px;
+}
+
