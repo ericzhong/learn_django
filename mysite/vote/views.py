@@ -7,15 +7,42 @@ from .models import User,Issue,Vote,Comment
 
 def home(request):
     issues = Issue.objects.all().order_by('-create_time')
+
     items = []
     for issue in issues:
         item = {}
+        item['issue_id'] = issue.id
         item['title'] = issue.title
         item['user'] = issue.create_by.name
         item['create_time'] =  issue.create_time.strftime('%Y-%m-%d %H:%M:%S');
-        item['reply'] =  Comment.objects.filter(issue_id=issue.id).count()
+        item['reply'] = Comment.objects.filter(issue_id=issue.id).count()
         item['agree'] = Vote.objects.filter(issue_id=issue.id,agree=True).count()
         item['disagree'] = Vote.objects.filter(issue_id=issue.id,agree=False).count()
         items.append(item)
 
     return render(request, 'index.html', {'items': items})
+
+
+
+def issue(request, n):
+    issue = Issue.objects.get(id=n)
+
+    item = {}
+    item['title'] = issue.title
+    item['content'] = issue.content
+    item['user'] = issue.create_by.name
+    item['create_time'] = issue.create_time.strftime('%Y-%m-%d %H:%M:%S');
+    item['reply'] = Comment.objects.filter(issue_id=n).count() or 0
+    item['agree'] = Vote.objects.filter(issue_id=n,agree=True).count()
+    item['disagree'] = Vote.objects.filter(issue_id=n,agree=False).count()
+
+    objects = Comment.objects.filter(issue_id=n)
+    comments = []
+    for o in objects:
+        comment = {}
+        comment['content'] = o.content
+        comment['user'] = o.create_by.name
+        comment['create_time'] = o.create_time.strftime('%Y-%m-%d %H:%M:%S');
+        comments.append(comment)
+
+    return render(request, 'issue.html', {'item': item, 'comments': comments})

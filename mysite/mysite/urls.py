@@ -18,6 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^$', 'vote.views.home', name='home'),
+    url(r'^issue/(\d+)/$', 'vote.views.issue', name='issue'),
 
     url(r'^admin/', include(admin.site.urls)),
 ]
