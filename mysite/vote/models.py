@@ -29,23 +29,15 @@ class Issue(models.Model):
         return self.title
 
 
-@python_2_unicode_compatible
 class Vote(models.Model):
     issue_id = models.ForeignKey('Issue')
     vote_by = models.ForeignKey('User')
     agree = models.NullBooleanField(blank=True)
 
-    def __str__(self):
-        return self
 
-
-@python_2_unicode_compatible
 class Comment(models.Model):
     issue_id = models.ForeignKey('Issue')
     content = models.TextField()
     create_by = models.ForeignKey('User')
     create_time = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self
 
