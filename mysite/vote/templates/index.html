@@ -49,12 +49,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td><a href="issue.html">今晚看电影么？</a></td><td>Eric</td><td>2015-10-11</td><td>5</td><td>10 | 20</td></tr>
-          <tr><td><a href="issue.html">今晚看电影么？</a></td><td>Eric</td><td>2015-10-11</td><td>5</td><td>10 | 20</td></tr>
-          <tr><td><a href="issue.html">今晚看电影么？</a></td><td>Eric</td><td>2015-10-11</td><td>5</td><td>10 | 20</td></tr>
-          <tr><td><a href="issue.html">今晚看电影么？</a></td><td>Eric</td><td>2015-10-11</td><td>5</td><td>10 | 20</td></tr>
-          <tr><td><a href="issue.html">今晚看电影么？</a></td><td>Eric</td><td>2015-10-11</td><td>5</td><td>10 | 20</td></tr>
-          <tr><td><a href="issue.html">今晚看电影么？</a></td><td>Eric</td><td>2015-10-11</td><td>5</td><td>10 | 20</td></tr>
+          {% for item in items %}
+          <tr>
+              <td><a href="issue.html">{{ item.title }}</td>
+              <td>{{ item.user }}</td>
+              <td>{{ item.create_time }}</td>
+              <td>{{ item.reply }}</td>
+              <td>{{ item.agree }} - {{ item.disagree }}</td>
+          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
