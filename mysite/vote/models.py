@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django import forms
 from django.utils.encoding import python_2_unicode_compatible
 
 # Create your models here.
@@ -40,4 +41,26 @@ class Comment(models.Model):
     content = models.TextField()
     create_by = models.ForeignKey('User')
     create_time = models.DateTimeField(auto_now_add=True)
+
+
+class UserForm(forms.ModelForm):
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ['name', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+
+        name = cleaned_data.get('name')
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password != confirm_password:
+            raise forms.ValidationError("密码不相同")
+
 

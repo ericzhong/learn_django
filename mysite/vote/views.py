@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import User,Issue,Vote,Comment
-from .forms import SignupForm
+from .models import User,Issue,Vote,Comment,UserForm
 
 # Create your views here.
 
@@ -57,15 +56,15 @@ def login(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = SignupForm(request.POST)
+        form = UserForm(request.POST)
          
         if form.is_valid():
-            username = form.cleaned_data['username']
+            name = form.cleaned_data['name']
             password = form.cleaned_data['password']
-            return HttpResponse("%s, %s" % (username, password))
-     
+            return HttpResponse("%s, %s" % (name, password))
+
     else:
-        form = SignupForm()
+        form = UserForm()
     return render(request, 'signup.html', {'form': form})
 
 
