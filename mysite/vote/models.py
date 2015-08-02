@@ -12,7 +12,7 @@ class User(models.Model):
     name = models.CharField(max_length=30, unique=True)
     password = models.CharField(max_length=30)
     create_time = models.DateTimeField(auto_now_add=True)
-    token = models.CharField(max_length=32, unique=True)
+    token = models.CharField(max_length=32, unique=True, null=True)
     last_login = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

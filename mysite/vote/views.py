@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 
 from .models import User,Issue,Vote,Comment,UserForm
 
@@ -61,10 +61,10 @@ def signup(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             password = form.cleaned_data['password']
-            return HttpResponse("%s, %s" % (name, password))
+            User(name=name,password=password,token=None).save():
+            return HttpResponseRedirect("/login")
 
     else:
         form = UserForm()
     return render(request, 'signup.html', {'form': form})
-
 
