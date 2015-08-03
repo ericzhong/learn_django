@@ -57,11 +57,11 @@ def login(request):
 def signup(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
-         
+
         if form.is_valid():
             name = form.cleaned_data['name']
-            password = form.cleaned_data['password']
-            User(name=name,password=password,token=None).save():
+            password = form.cleaned_data['password1']
+            User(name=name,password=password,token=None).save()
             return HttpResponseRedirect("/login")
 
     else:
