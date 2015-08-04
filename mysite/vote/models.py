@@ -44,7 +44,7 @@ class Comment(models.Model):
 
 
 
-class UserForm(forms.ModelForm):
+class SignupForm(forms.ModelForm):
     err_1 = {
         'required': "密码不能为空",
     }
@@ -67,7 +67,7 @@ class UserForm(forms.ModelForm):
         }
 
     def clean(self):
-        cleaned_data = super(UserForm, self).clean()
+        cleaned_data = super(SignupForm, self).clean()
 
         name = cleaned_data.get('name')
         password1 = cleaned_data.get('password1')
@@ -76,4 +76,37 @@ class UserForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("密码不相同")
 
+        return cleaned_data
+
+
+class LoginForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('name','password')
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+        error_messages = {
+            'name': {
+                'required': "用户名不能为空",
+            },
+            'password': {
+                'required': "密码不能为空",
+            },
+        }
+
+    def clean(self):
+
+        name = self.cleaned_data.get('name')
+        password = self.cleaned_data.get('password')
+
+        q = User.objects.filter(name=name)
+        if 0 == q.count():
+            raise forms.ValidationError("用户不存在")
+
+        if q[0].password != password:
+            raise forms.ValidationError("密码错误")
+
+        return self.cleaned_data
 

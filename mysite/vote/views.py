@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 
-from .models import User,Issue,Vote,Comment,UserForm
+from .models import User,Issue,Vote,Comment,SignupForm,LoginForm
 
 # Create your views here.
 
@@ -20,7 +20,9 @@ def home(request):
         item['disagree'] = Vote.objects.filter(issue_id=issue.id,agree=False).count()
         items.append(item)
 
-    return render(request, 'index.html', {'items': items})
+    name = request.session.get('name', None)
+
+    return render(request, 'index.html', {'items': items, 'username': name})
 
 
 
@@ -50,13 +52,31 @@ def issue(request, n):
 
 
 def login(request):
-    return render(request, 'login.html') 
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
 
+        if form.is_valid():
+            name = form.cleaned_data['name']
+
+            request.session['name'] = name
+            return HttpResponseRedirect("/")
+
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
+
+
+def logout(request):
+    try:
+        del request.session['name']
+    except: pass
+
+    return HttpResponseRedirect("/")
 
 
 def signup(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = SignupForm(request.POST)
 
         if form.is_valid():
             name = form.cleaned_data['name']
@@ -65,6 +85,6 @@ def signup(request):
             return HttpResponseRedirect("/login")
 
     else:
-        form = UserForm()
+        form = SignupForm()
     return render(request, 'signup.html', {'form': form})
 
