@@ -110,3 +110,19 @@ class LoginForm(forms.ModelForm):
 
         return self.cleaned_data
 
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('content',)
+        widgets = {
+            'content': forms.Textarea(),
+        }
+        error_messages = {
+            'content': {
+                'required': "评论内容不能为空",
+            },
+        }
+
+

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 
-from .models import User,Issue,Vote,Comment,SignupForm,LoginForm
+from .models import User,Issue,Vote,Comment,SignupForm,LoginForm,CommentForm
 
 # Create your views here.
 
@@ -27,6 +27,22 @@ def home(request):
 
 
 def issue(request, n):
+    name = request.session.get('name', None)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            content = form.cleaned_data['content']
+            if name is not None:
+                u = User.objects.get(name=name)
+                i = Issue.objects.get(id=n)
+                Comment(issue_id=i, content=content, create_by=u).save()
+                form = CommentForm()
+
+    else:
+        form = CommentForm()
+
     issue = Issue.objects.get(id=n)
 
     item = {}
@@ -47,7 +63,7 @@ def issue(request, n):
         comment['create_time'] = o.create_time.strftime('%Y-%m-%d %H:%M:%S');
         comments.append(comment)
 
-    return render(request, 'issue.html', {'item': item, 'comments': comments})
+    return render(request, 'issue.html', {'item': item, 'comments': comments, 'username': name, 'form': form})
 
 
 
@@ -62,7 +78,11 @@ def login(request):
             return HttpResponseRedirect("/")
 
     else:
+        if request.session.get('name', None) is not None:
+            return HttpResponseRedirect("/")
+
         form = LoginForm()
+
     return render(request, 'login.html', {'form': form})
 
 
@@ -85,6 +105,9 @@ def signup(request):
             return HttpResponseRedirect("/login")
 
     else:
-        form = SignupForm()
-    return render(request, 'signup.html', {'form': form})
+        if request.session.get('name', None) is not None:
+            return HttpResponseRedirect("/")
 
+        form = SignupForm()
+
+    return render(request, 'signup.html', {'form': form})
