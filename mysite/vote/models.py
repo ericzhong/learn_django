@@ -121,7 +121,23 @@ class CommentForm(forms.ModelForm):
         }
         error_messages = {
             'content': {
-                'required': "评论内容不能为空",
+                'required': "内容不能为空",
+            },
+        }
+
+
+class NewIssueForm(forms.ModelForm):
+
+    class Meta:
+        model = Issue
+        fields = ('title','content')
+        widgets = {
+            'title': forms.TextInput(),
+            'content': forms.Textarea(),
+        }
+        error_messages = {
+            'title': {
+                'required': "标题不能为空",
             },
         }
 

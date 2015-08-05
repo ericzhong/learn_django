@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
-from .models import User,Issue,Vote,Comment,SignupForm,LoginForm,CommentForm
+from .models import User,Issue,Vote,Comment,SignupForm,LoginForm,CommentForm,NewIssueForm
 
 # Create your views here.
 
@@ -66,6 +67,28 @@ def issue(request, n):
     return render(request, 'issue.html', {'item': item, 'comments': comments, 'username': name, 'form': form})
 
 
+def new_issue(request):
+    name = request.session.get('name', None)
+
+    if request.method == 'POST':
+        form = NewIssueForm(request.POST)
+
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            content = form.cleaned_data['content']
+            if name is not None:
+                u = User.objects.get(name=name)
+                Issue(title=title, content=content, create_by=u).save()
+                return HttpResponseRedirect(reverse('home'))
+
+    else:
+        if name is None:
+            return HttpResponseRedirect(reverse('home'))
+        form = NewIssueForm()
+
+    return render(request, 'new.html', {'username': name, 'form': form})
+
+
 
 def login(request):
     if request.method == 'POST':
@@ -75,11 +98,11 @@ def login(request):
             name = form.cleaned_data['name']
 
             request.session['name'] = name
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect(reverse('home'))
 
     else:
         if request.session.get('name', None) is not None:
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect(reverse('home'))
 
         form = LoginForm()
 
@@ -91,7 +114,7 @@ def logout(request):
         del request.session['name']
     except: pass
 
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect(reverse('home'))
 
 
 def signup(request):
@@ -102,11 +125,11 @@ def signup(request):
             name = form.cleaned_data['name']
             password = form.cleaned_data['password1']
             User(name=name,password=password,token=None).save()
-            return HttpResponseRedirect("/login")
+            return HttpResponseRedirect(reverse('login'))
 
     else:
         if request.session.get('name', None) is not None:
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect(reverse('home'))
 
         form = SignupForm()
 

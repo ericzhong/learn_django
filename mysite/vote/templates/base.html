@@ -26,13 +26,13 @@
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="/">投票系统</a>
+            <a class="navbar-brand" href="{% url 'home' %}">投票系统</a>
           </div>
           <p class="navbar-text navbar-right">
             {% if username %}
-            你好，<a href="password.html" class="navbar-link">{{ username }}</a> | <a href="/logout/" class="navbar-link">退出</a>
+            你好，<a href="password.html" class="navbar-link">{{ username }}</a> | <a href="{% url 'logout' %}" class="navbar-link">退出</a>
             {% else %}
-            <a href="/login/" class="navbar-link">登陆</a> | <a href="/signup/" class="navbar-link">注册</a>
+            <a href="{% url 'login' %}" class="navbar-link">登陆</a> | <a href="{% url 'signup' %}" class="navbar-link">注册</a>
             {% endif %}
           </p>
         </div>

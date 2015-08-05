@@ -2,7 +2,9 @@
 
 {% block content %}
     <div  class="container content"> 
-      <a id="new_issue" type="button" class="btn btn-primary pull-right" href="new.html">新建主题</a>
+      {% if username %}
+      <a id="new_issue" type="button" class="btn btn-primary pull-right" href="{% url 'new' %}">新建主题</a>
+      {% endif %}
 
       <table class="table table-bordered table-hover">
         <thead>

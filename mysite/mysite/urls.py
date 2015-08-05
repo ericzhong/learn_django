@@ -19,6 +19,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^$', 'vote.views.home', name='home'),
     url(r'^issue/(\d+)/$', 'vote.views.issue', name='issue'),
+    url(r'^new/$', 'vote.views.new_issue', name='new'),
     url(r'^login/$', 'vote.views.login', name='login'),
     url(r'^logout/$', 'vote.views.logout', name='logout'),
     url(r'^signup/$', 'vote.views.signup', name='signup'),
