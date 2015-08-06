@@ -3,6 +3,15 @@
 {% load widget_tweaks %}
 
 {% block content %}
+
+<script>
+function vote(url) {
+    if (confirm("每个主题只能投票1次，确定投票么？") == true) {
+        location = url;
+    }
+}
+</script>
+
     <!-- content begin -->
     <div class="container content"> 
       <div class="issue">
@@ -13,12 +22,11 @@
         </div>
       </div>
 
-      <button id="button_agree" type="button" class="btn btn-success" aria-label="Left Align"
-        onclick="document.getElementById('button_agree').disabled='disabled';">
+      <button id="button_agree" type="button" class="btn btn-success" aria-label="Left Align" onclick="vote('{% url 'issue' item.id %}?agree=1')" {% if not item.votable %} disabled="disabled" {% endif %}>
         <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
         {{ item.agree }}
       </button>
-      <button id="button_disagree" type="button" class="btn btn-danger" aria-label="Left Align">
+      <button id="button_disagree" type="button" class="btn btn-danger" aria-label="Left Align" onclick="vote('{% url 'issue' item.id %}?agree=0')" {% if not item.votable %} disabled="disabled" {% endif %}>
         <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
         {{ item.disagree }}
       </button>

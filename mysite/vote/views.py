@@ -48,11 +48,30 @@ def issue(request, n):
                 form = CommentForm()
 
     else:
+        agree = request.GET.get('agree', None)
+        if agree is not None:
+            if '0' == agree:
+                agree = False
+            elif '1' == agree:
+                agree = True
+            else:
+                return HttpResponseRedirect(reverse('issue', args=[n]))
+
+            if name is not None:
+                if 0 != Vote.objects.filter(vote_by=User.objects.get(name=name),
+                                            issue_id=Issue.objects.get(id=n)).count():
+                    return HttpResponseRedirect(reverse('issue', args=[n]))
+
+                Vote(issue_id=Issue.objects.get(id=n),
+                    vote_by=User.objects.get(name=name),
+                    agree=agree).save()
+
         form = CommentForm()
 
     issue = Issue.objects.get(id=n)
 
     item = {}
+    item['id'] = n
     item['title'] = issue.title
     item['content'] = issue.content
     item['user'] = issue.create_by.name
@@ -60,6 +79,8 @@ def issue(request, n):
     item['reply'] = Comment.objects.filter(issue_id=n).count() or 0
     item['agree'] = Vote.objects.filter(issue_id=n,agree=True).count()
     item['disagree'] = Vote.objects.filter(issue_id=n,agree=False).count()
+    item['votable'] = False if Vote.objects.filter(vote_by=User.objects.get(name=name),
+                                  issue_id=Issue.objects.get(id=n)).count() !=0 else True
 
     objects = Comment.objects.filter(issue_id=n)
     comments = []
