@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^login/$', 'vote.views.login', name='login'),
     url(r'^logout/$', 'vote.views.logout', name='logout'),
     url(r'^signup/$', 'vote.views.signup', name='signup'),
+    url(r'^password/$', 'vote.views.password', name='password'),
 
     url(r'^admin/', include(admin.site.urls)),
 ]

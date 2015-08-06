@@ -2,9 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from .models import User,Issue,Vote,Comment,SignupForm,LoginForm,CommentForm,NewIssueForm
+from .models import User,Issue,Vote,Comment,SignupForm,LoginForm,CommentForm,NewIssueForm,PasswordForm
 
 # Create your views here.
+
+def _logout(request):
+    try:
+        del request.session['name']
+    except: pass
+
 
 def home(request):
     issues = Issue.objects.all().order_by('-create_time')
@@ -110,10 +116,7 @@ def login(request):
 
 
 def logout(request):
-    try:
-        del request.session['name']
-    except: pass
-
+    _logout(request)
     return HttpResponseRedirect(reverse('home'))
 
 
@@ -134,3 +137,24 @@ def signup(request):
         form = SignupForm()
 
     return render(request, 'signup.html', {'form': form})
+
+
+def password(request):
+    name = request.session.get('name', None)
+
+    if request.session.get('name', None) is None:
+        return HttpResponseRedirect(reverse('home'))
+
+    if request.method == 'POST':
+        form = PasswordForm(request.POST,username=name)
+
+        if form.is_valid():
+            password = form.cleaned_data['password1']
+            User.objects.filter(name=name).update(password=password)
+            _logout(request)
+            return HttpResponseRedirect(reverse('login'))
+
+    else:
+        form = PasswordForm()
+
+    return render(request, 'password.html', {'username': name, 'form': form})
