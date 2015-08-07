@@ -37,6 +37,7 @@ def issue(request, n):
     name = request.session.get('name', None)
 
     if request.method == 'POST':
+        # comment
         form = CommentForm(request.POST)
 
         if form.is_valid():
@@ -49,6 +50,8 @@ def issue(request, n):
 
     else:
         agree = request.GET.get('agree', None)
+
+        # voting
         if agree is not None:
             if '0' == agree:
                 agree = False
@@ -58,6 +61,7 @@ def issue(request, n):
                 return HttpResponseRedirect(reverse('issue', args=[n]))
 
             if name is not None:
+                # only one time
                 if 0 != Vote.objects.filter(vote_by=User.objects.get(name=name),
                                             issue_id=Issue.objects.get(id=n)).count():
                     return HttpResponseRedirect(reverse('issue', args=[n]))
@@ -79,8 +83,10 @@ def issue(request, n):
     item['reply'] = Comment.objects.filter(issue_id=n).count() or 0
     item['agree'] = Vote.objects.filter(issue_id=n,agree=True).count()
     item['disagree'] = Vote.objects.filter(issue_id=n,agree=False).count()
-    item['votable'] = False if Vote.objects.filter(vote_by=User.objects.get(name=name),
-                                  issue_id=Issue.objects.get(id=n)).count() !=0 else True
+    item['votable'] = False if name is None else \
+                        False if Vote.objects.filter( \
+                            vote_by=User.objects.get(name=name), \
+                            issue_id=Issue.objects.get(id=n)).count() !=0 else True
 
     objects = Comment.objects.filter(issue_id=n)
     comments = []
