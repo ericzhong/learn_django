@@ -17,15 +17,25 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from rest_framework import routers
-from quickstart import views
+from quickstart import views as quick_views
+from vote import views as vote_views
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+
+#quick_router = routers.DefaultRouter()
+#quick_router.register(r'users', quick_views.UserViewSet)
+#quick_router.register(r'groups', quick_views.GroupViewSet)
+
+vote_router = routers.DefaultRouter()
+vote_router.register(r'users', vote_views.UserViewSet)
+vote_router.register(r'groups', vote_views.GroupViewSet)
+vote_router.register(r'issues', vote_views.IssueViewSet)
+vote_router.register(r'votes', vote_views.VoteViewSet)
+vote_router.register(r'comments', vote_views.CommentViewSet)
 
 
 urlpatterns = [
-    url(r'^api/', include(router.urls)),
+    #url(r'^quick-api/', include(quick_router.urls)),
+    url(r'^vote-api/', include(vote_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^admin/', include(admin.site.urls)),
